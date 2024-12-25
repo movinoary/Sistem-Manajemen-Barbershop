@@ -24,3 +24,11 @@ Sistem Manajemen Barbershop dirancang untuk memenuhi kebutuhan administrasi dan 
 | Muhamad Nur Alif  | 24120400005 |
 | Mohammad Vino Arystio | 24120400011 |
 | Suci Fransica Sisilia R	 | 24120500008 |
+
+
+## Document
+
+[Gap Analysis](https://docs.google.com/document/d/14wih7NKG0grN8qMkHPxpm9afNuZGgkCuWnd9e0cfmLU/edit?tab=t.0)
+[Usulan Fitur](https://docs.google.com/document/d/14wih7NKG0grN8qMkHPxpm9afNuZGgkCuWnd9e0cfmLU/edit?tab=t.4nijwk8c8bw)
+[Software Requirements](https://docs.google.com/document/d/1dwHzmKVEFKd0lVS8fPb79uB2TCAXpAcJVPmRv8bdtIE/edit?tab=t.0)
+
