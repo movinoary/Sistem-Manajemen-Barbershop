@@ -1,5 +1,5 @@
 
-![Logo](https://pbs.twimg.com/profile_images/1712065090109968384/c35qegpc_400x400.jpg)
+![Logo](https://www.cakrawala.ac.id/images/logo-cakrawala-black.png)
 
 
 # Sistem Manajemen Barbershop
