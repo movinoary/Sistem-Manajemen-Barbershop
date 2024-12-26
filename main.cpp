@@ -9,20 +9,21 @@
 #include <windows.h>
 using namespace std;
 
-string db_userAccount[5][5] = {
+string db_userAccount[6][5] = {
     // idUser, nama,  password, role, idKaryawan
     {"UR-1", "admin", "admin123", "admin", "-"},
     {"UR-2", "adit", "adit123", "staff", "ST-1"},
     {"UR-3", "alif", "alif123", "staff", "ST-2"},
     {"UR-4", "sisil", "sisil123", "staff", "ST-3"},
-    {"UR-5", "vino", "vino123", "staff", "ST-4"}
+    {"UR-5", "vino", "vino123", "staff", "ST-4"},
+    {"UR-6", "iqbaal", "iqbaal", "staff", "ST-3"},
 };
 string db_karyawan[4][4] = {
     // idKaryawan, namaLengkap, statusKerja, idShift
-    {"ST-1", "Adit Praditia", "active", "SF-1"},
-    {"ST-2", "Muhammad Nur Alif", "active", "SF-1"},
-    {"ST-3", "Suci Fransica Sisilia", "active", "SF-2"},
-    {"ST-4", "Mohammad Vino Arystio", "active", "SF-2"}
+    {"ST-1", "Adit Praditia", "active", "Shift-1"},
+    {"ST-2", "Muhammad Nur Alif", "active", "Shift-1"},
+    {"ST-3", "Suci Fransica Sisilia", "active", "Shift-2"},
+    {"ST-4", "Mohammad Vino Arystio", "active", "Shift-2"}
 };
 string db_dataShift[2][8] = {
     // idShift, waktuMulai, waktuAkhir, 
@@ -407,6 +408,7 @@ void doneQueue(){
         }
     }
     if(isFound){
+        acQueue--;
         doQueue++;
     }
     queueManagement();
@@ -440,8 +442,8 @@ void queueManagement() {
     int choice;
     cout << "Queue Management" << endl;
     cout << "Queue : " << codeQueue << endl;
-    cout << "Active Queue :" << acQueue << endl;
-    cout << "Done Queue :" << doQueue << endl;
+    cout << "Active Queue : " << acQueue << endl;
+    cout << "Done Queue : " << doQueue << endl;
     cout << "Total Queue : " << nQueue << endl;
     cout << "" << endl;
     cout << "============" << endl;
@@ -484,10 +486,93 @@ void queueManagement() {
 };
 
 // =============== BOOKING FUNCTION
+void newBooking() {
+    system("cls");
+    string name, date, time;
+    int service;
+    cout << "============" << endl;
+    cout << "20. Back" << endl;
+    cout << "============" << endl;
+    cout << "Enter name: ";
+    cin >> name;
 
-void newBooking() {};
-void confBooking() {};
-void timeTabel() {};
+    if (name == "20") {
+        return bookingManagement();
+    }
+    cout << "Enter date (ex : 251224): ";
+    cin >> date;
+    cout << "Enter time (ex : 09 (Only Hours)): ";
+    cin >> time;
+    for(int a=0; a < 4; a++){
+        cout << a << "." << db_listService[a][1] << endl;
+    }
+    cout << "Enter service: ";
+    cin >> service;
+
+    string queue = to_string(nQueue + 1);
+    string code = date + "-" + time + queue; 
+    string idQue = "QU-" + queue; 
+
+    db_transaksi[nQueue][0] = idQue;
+    db_transaksi[nQueue][1] = name;
+    db_transaksi[nQueue][2] = code;
+    db_transaksi[nQueue][3] = idShift(time);
+    db_transaksi[nQueue][4] = db_listService[service][1];
+    db_transaksi[nQueue][5] = "booking";
+    db_transaksi[nQueue][6] = "---";
+
+    for(int a=0; a < 6; a++){
+        cout  << db_transaksi[nQueue][a] << endl;
+    }
+    
+    nQueue++;
+    bookingManagement();
+};
+void confBooking() {
+system("cls");
+    string code, staff;
+    bool isFound = false;
+    cout << "Code" << " || " << "Customer Name"  << endl;
+    for(int a=0; a < nQueue; a++){
+        if("booking" == db_transaksi[a][5]){
+            cout << db_transaksi[a][1] << " || " << db_transaksi[a][2]  << endl;
+        }
+    }
+    cout << "============" << endl;
+    cout << "20. Back" << endl;
+    cout << "============" << endl;
+    cout << "Enter Code : ";
+    cin >> code;
+    if (code == "20") {
+        return bookingManagement();
+    }
+    for(int a=0; a < nQueue; a++){
+        if(code == db_transaksi[a][2]){
+            isFound = true;
+            db_transaksi[a][5] = "waiting"; 
+        }
+    }
+    return bookingManagement();
+};
+void timeTabel() {
+    system("cls");
+    int choice;
+    for(int a=0; a < 4; a++){
+        cout << db_karyawan[a][0] << " || " << db_karyawan[a][1]  << endl;
+    }
+
+    cout << "============" << endl;
+    cout << "20. Back" << endl;
+    cout << "============" << endl;
+
+    cout << "" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    if (choice == 20) {
+        return bookingManagement();
+    }
+};
 
 void bookingManagement() {
     system("cls");
