@@ -56,6 +56,8 @@ void queueManagement();
 void bookingManagement(); 
 void logout(); 
 
+void dataStaff();
+
 // =============== UNIVERSAL FUNCTION ===============
 string idShift(string time) {
     string id;
@@ -195,21 +197,28 @@ void menuAdmin () {
 // =============== STAFF FUNCTION
 void editStaff() {
     int idStaff = 5;
-    string id, name, status, shift;
-    cout << "Enter ID Staff: ";
+    int id = 0;
+    string name, status, shift;
+    cout << "Enter No Staff: ";
     cin >> id;
     cout << "Enter Full Name: ";
     cin >> name;
     cout << "Enter Status: ";
     cin >> status;
     cout << "=============================" << endl;
-    cout << "ID Shift" << " || " << "Start Time"  << " - " << "End Time" <<  endl;
+    cout <<  " || "  << "ID Shift" << " || " << "Start Time"  << " - " << "End Time" <<  " || "  <<  endl;
     for(int a=0; a < 2; a++){
-        cout <<  db_dataShift[a][0] << " || " << db_dataShift[a][1] << " - " << db_dataShift[a][7]  << endl;
+        cout <<  " || " <<   db_dataShift[a][0] << " || " << db_dataShift[a][1] << " - " << db_dataShift[a][7] <<  " || "  << endl;
     }
     cout << "=============================" << endl;
     cout << "Enter ID Shift: ";
     cin >> shift;
+
+    db_karyawan[id][1] = name;
+    db_karyawan[id][2] = status;
+    db_karyawan[id][3] = shift;
+
+    dataStaff();
 }
 
 void dataStaff() {
@@ -218,10 +227,10 @@ void dataStaff() {
     cout << "=============================" << endl;
     cout << "======== List Staff  ========" << endl;
     cout << "=============================" << endl;
-    cout << "No" << " || " << "Full Name"  << " || " << "Status"  <<  " || " << "Shift"  <<  endl;
+    cout <<  " || " << "No" << " || " << "Full Name"  << " || " << "Status"  <<  " || " << "Shift"  <<  " || " <<  endl;
     for(int a=0; a < 4; a++){
-        cout << a;
-        for(int i=1; i < 7; i++){
+        cout <<  " || " << a << " || ";
+        for(int i=1; i < 4; i++){
             cout << db_karyawan[a][i] << " || ";
         }
         cout << endl;
