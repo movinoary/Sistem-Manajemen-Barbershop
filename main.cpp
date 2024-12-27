@@ -127,7 +127,7 @@ void login() {
                 message = "Login berhasil!\nSelamat Datang " + db_userAccount[i][1];
             } else {
                 found = false;
-                message = "password tidak sesuai!";
+                message = "password tidak sesuai !";
             }
             // cout << message << endl;
             // break;
@@ -136,7 +136,9 @@ void login() {
 
     if (!found) {
         system("cls");
-        cout << message << endl;
+        cout << "=============================" << endl;
+        cout << "===" << message << "===" << endl;
+        cout << "=============================" << endl;
         main();
     } else {
         if(db_userlogin[3] == "admin"){
@@ -191,8 +193,98 @@ void menuAdmin () {
 }
 
 // =============== STAFF FUNCTION
-void dataStaff() {};
-void dataShift() {};
+void editStaff() {
+    int idStaff = 5;
+    string id, name, status, shift;
+    cout << "Enter ID Staff: ";
+    cin >> id;
+    cout << "Enter Full Name: ";
+    cin >> name;
+    cout << "Enter Status: ";
+    cin >> status;
+    cout << "=============================" << endl;
+    cout << "ID Shift" << " || " << "Start Time"  << " - " << "End Time" <<  endl;
+    for(int a=0; a < 2; a++){
+        cout <<  db_dataShift[a][0] << " || " << db_dataShift[a][1] << " - " << db_dataShift[a][7]  << endl;
+    }
+    cout << "=============================" << endl;
+    cout << "Enter ID Shift: ";
+    cin >> shift;
+}
+
+void dataStaff() {
+    system("cls");
+    int choice;
+    cout << "=============================" << endl;
+    cout << "======== List Staff  ========" << endl;
+    cout << "=============================" << endl;
+    cout << "No" << " || " << "Full Name"  << " || " << "Status"  <<  " || " << "Shift"  <<  endl;
+    for(int a=0; a < 4; a++){
+        cout << a;
+        for(int i=1; i < 7; i++){
+            cout << db_karyawan[a][i] << " || ";
+        }
+        cout << endl;
+    }
+    cout << "=============================" << endl;
+    cout << "" << endl;
+    cout << "1. Edit Staff" << endl;
+    cout << "20. Back" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
+
+    cout << "" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    switch (choice){
+        case 1:
+            editStaff();
+            break;
+        case 20:
+            staffManagement();
+            break;
+        default:
+            system("cls");
+            cout << "Your input not found!" << endl;
+            dataStaff();
+    }
+}
+void dataShift() {
+    system("cls");
+    int choice;
+    cout << "=============================" << endl;
+    cout << "======== List Shift  ========" << endl;
+    cout << "=============================" << endl;
+    cout << "=============================" << endl;
+    cout << "ID Shift" << " || " << "Start Time"  << " - " << "End Time" <<  " || " << "Staff Operation"<< endl;
+    for(int a=0; a < 2; a++){
+        cout <<  db_dataShift[a][0] << " || " << db_dataShift[a][1] << " - " << db_dataShift[a][7] << " || ";
+        for(int i=0; i<4; i++){
+            if (db_dataShift[a][0] == db_karyawan[i][3]){
+                cout << db_karyawan[i][1] << "  ";
+            }
+        }
+        cout << endl;
+    }
+    cout << "=============================" << endl;
+    cout << "" << endl;
+    cout << "20. Back" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    switch (choice){
+        case 20:
+            staffManagement();
+            break;
+        default:
+            cout << "Your input not found!" << endl;
+            dataShift();
+    }
+};
 
 void staffManagement(){    
     system("cls");
@@ -229,7 +321,6 @@ void staffManagement(){
 }
 
 // =============== REPORT FUNCTION
-
 void reportService(){};
 void trackingStaff(){};
 
