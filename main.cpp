@@ -81,8 +81,14 @@ string nameSatff(const string& idStaff) {
 // =============== RUN ===============
 int main() {
     int choice;
+    cout << "=============================" << endl;
+    cout << "=== Welcome to App Barber ===" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "1. Login" << endl;
     cout << "0. Quit" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter Your Choice : ";
     cin >> choice;
 
@@ -91,7 +97,6 @@ int main() {
         login();
         break;
     case 0:
-        cout << "Thankyou for coming!";
         break;
     default:
         system("cls");
@@ -146,8 +151,10 @@ void login() {
 
 void logout(){
     system("cls");
-    cout << "Thankyou for coming!" << endl;
-    for(int a=0; a < 5; a++){
+        cout << "=============================" << endl;
+        cout << "=== Thankyou for coming! ====" << endl;
+        cout << "=============================" << endl;
+        for(int a=0; a < 5; a++){
         db_userlogin[a] = "";
     }
 }
@@ -175,7 +182,6 @@ void menuAdmin () {
             logout();
             main();
         case 0:
-            cout << "Thankyou for coming!";
             break;
         default:
             system("cls");
@@ -214,7 +220,6 @@ void staffManagement(){
             logout();
             main();
         case 0:
-            cout << "Thankyou for coming!";
             break;
         default:
             system("cls");
@@ -254,7 +259,6 @@ void serviceReport(){
             logout();
             main();
         case 0:
-            cout << "Thankyou for coming!";
             break;
         default:
             system("cls");
@@ -267,11 +271,16 @@ void serviceReport(){
 void menuStaff() {
     system("cls");
     int choice;
-    cout << "Welcome Staff" << endl;
+    cout << "=============================" << endl;
+    cout << "===== Welcome to Staff  =====" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "1. Queue Management" << endl;
     cout << "2. Booking Management" << endl;
     cout << "99. Logout" << endl;
     cout << "0. Quit" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter Your Choice : ";
     cin >> choice;
 
@@ -286,7 +295,6 @@ void menuStaff() {
             logout();
             main();
         case 0:
-            cout << "Thankyou for coming!";
             break;
         default:
             system("cls");
@@ -300,9 +308,13 @@ void addQueue(){
     system("cls");
     string name, date, time;
     int service;
-    cout << "============" << endl;
+    cout << "=============================" << endl;
+    cout << "========= Add Queue  ========" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "20. Back" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter name: ";
     cin >> name;
 
@@ -342,26 +354,31 @@ void nextQueue(){
     system("cls");
     string code, staff;
     bool isFound = false;
+    cout << "=============================" << endl;
+    cout << "======== Next Queue  ========" << endl;
+    cout << "=============================" << endl;
     cout << "Code" << " || " << "Customer Name"  << endl;
     for(int a=0; a < nQueue; a++){
         if("waiting" == db_transaksi[a][5]){
             cout << db_transaksi[a][1] << " || " << db_transaksi[a][2]  << endl;
         }
     }
-    cout << "============" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "20. Back" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+        cout << "=============================" << endl;
     cout << "Enter Code : ";
     cin >> code;
     if (code == "20") {
         return queueManagement();
     }
-    cout << "============" << endl;
+    cout << "=============================" << endl;
     cout << "Code" << " || " << "Staff Name"  << endl;
     for(int a=0; a < 4; a++){
         cout << db_karyawan[a][0] << " || " << db_karyawan[a][1]  << endl;
     }
-    cout << "============" << endl;
+    cout << "=============================" << endl;
 
     cout << "Staff Code : ";
     cin >> staff;
@@ -385,15 +402,20 @@ void doneQueue(){
     system("cls");
     string code;
     bool isFound = false;
+    cout << "=============================" << endl;
+    cout << "======== Done Queue  ========" << endl;
+    cout << "=============================" << endl;
     cout << "Code" << " || " << "Customer Name"  << endl;
     for(int a=0; a < nQueue; a++){
         if("prosess" == db_transaksi[a][5]){
         cout << a << "." << db_transaksi[a][1] << "||" << db_transaksi[a][2]  << endl;
         }
     }
-    cout << "============" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "20. Back" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;    
     cout << "Enter Code : ";
     cin >> code;
 
@@ -416,6 +438,9 @@ void doneQueue(){
 void listQueue(){
     system("cls");
     int choice;
+    cout << "=============================" << endl;
+    cout << "======== List Queue  ========" << endl;
+    cout << "=============================" << endl;
     cout << "idQueue" << " || " << "Customer Name"  << " || " << "Customer Code"  <<  " || " << "Shift"  << " || " << "Service" << " || " << "Status"  << " || " << "Staff" <<  endl;
     for(int a=0; a < nQueue; a++){
         cout << a;
@@ -424,9 +449,11 @@ void listQueue(){
         }
         cout << endl;
     }
-    cout << "============" << endl;
+   cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "20. Back" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
 
     cout << "" << endl;
     cout << "Enter Your Choice : ";
@@ -440,13 +467,16 @@ void listQueue(){
 void queueManagement() {
     system("cls");
     int choice;
-    cout << "Queue Management" << endl;
+    cout << "=============================" << endl;
+    cout << "===== Queue Management  =====" << endl;
+    cout << "=============================" << endl;
     cout << "Queue : " << codeQueue << endl;
     cout << "Active Queue : " << acQueue << endl;
     cout << "Done Queue : " << doQueue << endl;
     cout << "Total Queue : " << nQueue << endl;
+    cout << "=============================" << endl;
     cout << "" << endl;
-    cout << "============" << endl;
+    cout << "=============================" << endl;
     cout << "1. Add Queue" << endl;
     cout << "2. Next Queue" << endl;
     cout << "3. Done Queue" << endl;
@@ -454,7 +484,8 @@ void queueManagement() {
     cout << "10. Menu" << endl;
     cout << "99. Logout" << endl;
     cout << "0. Quit" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "" << endl;
     cout << "Enter Your Choice : ";
     cin >> choice;
@@ -476,7 +507,6 @@ void queueManagement() {
             logout();
             main();
         case 0:
-            cout << "Thankyou for coming!";
             break;
         default:
             system("cls");
@@ -490,9 +520,13 @@ void newBooking() {
     system("cls");
     string name, date, time;
     int service;
-    cout << "============" << endl;
+    cout << "=============================" << endl;
+    cout << "======= New Booking   =======" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "20. Back" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter name: ";
     cin >> name;
 
@@ -531,6 +565,9 @@ void newBooking() {
 void confBooking() {
 system("cls");
     string code, staff;
+    cout << "=============================" << endl;
+    cout << "=== Confirmation Booking  ===" << endl;
+    cout << "=============================" << endl;
     bool isFound = false;
     cout << "Code" << " || " << "Customer Name"  << endl;
     for(int a=0; a < nQueue; a++){
@@ -538,9 +575,11 @@ system("cls");
             cout << db_transaksi[a][1] << " || " << db_transaksi[a][2]  << endl;
         }
     }
-    cout << "============" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "20. Back" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter Code : ";
     cin >> code;
     if (code == "20") {
@@ -556,14 +595,19 @@ system("cls");
 };
 void timeTabel() {
     system("cls");
+    cout << "=============================" << endl;
+    cout << "======== Time Tabel  ========" << endl;
+    cout << "=============================" << endl;
     int choice;
     for(int a=0; a < 4; a++){
         cout << db_karyawan[a][0] << " || " << db_karyawan[a][1]  << endl;
     }
 
-    cout << "============" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "20. Back" << endl;
-    cout << "============" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
 
     cout << "" << endl;
     cout << "Enter Your Choice : ";
@@ -577,13 +621,18 @@ void timeTabel() {
 void bookingManagement() {
     system("cls");
     int choice;
-    cout << "Booking Management" << endl;
+    cout << "=============================" << endl;
+    cout << "==== Booking Management  ====" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "1. New Booking" << endl;
     cout << "2. Confirmation Booking" << endl;
     cout << "3. Timetable " << endl;
     cout << "10. Menu" << endl;
     cout << "99. Logout" << endl;
     cout << "0. Quit" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter Your Choice : ";
     cin >> choice;
 
@@ -602,7 +651,6 @@ void bookingManagement() {
             logout();
             main();
         case 0:
-            cout << "Thankyou for coming!";
             break;
         default:
             system("cls");
