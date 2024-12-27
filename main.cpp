@@ -18,12 +18,12 @@ string db_userAccount[6][5] = {
     {"UR-5", "vino", "vino123", "staff", "ST-4"},
     {"UR-6", "iqbaal", "iqbaal", "staff", "ST-3"},
 };
-string db_karyawan[4][4] = {
+string db_karyawan[4][5] = {
     // idKaryawan, namaLengkap, statusKerja, idShift
-    {"ST-1", "Adit Praditia", "active", "Shift-1"},
-    {"ST-2", "Muhammad Nur Alif", "active", "Shift-1"},
-    {"ST-3", "Suci Fransica Sisilia", "active", "Shift-2"},
-    {"ST-4", "Mohammad Vino Arystio", "active", "Shift-2"}
+    {"ST-1", "Adit Praditia", "active", "Shift-1", "0"},
+    {"ST-2", "Muhammad Nur Alif", "active", "Shift-1", "0"},
+    {"ST-3", "Suci Fransica Sisilia", "active", "Shift-2", "0"},
+    {"ST-4", "Mohammad Vino Arystio", "active", "Shift-2", "0"},
 };
 string db_dataShift[2][8] = {
     // idShift, waktuMulai, waktuAkhir, 
@@ -38,7 +38,7 @@ string db_listService[4][3] = {
     {"LS-4", "Cukur Dewasa + Cuci", "45000"},
 };
 string db_transaksi[100][7] = {
-    // idQueue, nama,  code, idShift, idService, status, idKaryawan
+    // idQueue, nama,  code, Shift, Name Service, status, Staff Name
     // {"QU-1",  "asep", "25122024-10001", "SF-1", "LS-3", "wating", "ST-2"}
 };
 string db_userlogin[5];
@@ -330,7 +330,52 @@ void staffManagement(){
 }
 
 // =============== REPORT FUNCTION
-void reportService(){};
+void reportService(){
+    system("cls");
+    int choice;
+    for(int i=0; i < 4; i++){
+        int totalCustomer = 0;
+        for(int a=0; a < nQueue; a++){
+            if(db_karyawan[i][1] == db_transaksi[a][6]){
+                totalCustomer++;
+            }
+        }
+        db_karyawan[i][4] = to_string(totalCustomer);
+    }
+    
+    cout << "=============================" << endl;
+    cout << "===== Queue Management  =====" << endl;
+    cout << "=============================" << endl;
+    cout << "Total Days Customer  : " << nQueue << endl;
+    cout << "====== Staff  Customer ======" << endl;
+    cout <<  " || "  << "Full Name"  << " || " << "Total "  <<  " || " << "Shift"  <<  " || " <<  endl;
+    for(int a=0; a < 4; a++){
+        cout <<  " || " <<   db_karyawan[a][1] << " || " << db_karyawan[a][4] << " || " << db_karyawan[a][3] <<  " || "  << endl;
+    }
+    cout << "=============================" << endl;
+    cout << "" << endl;
+    cout << "1. Edit Staff" << endl;
+    cout << "20. Back" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
+
+    cout << "" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    switch (choice){
+        case 1:
+            editStaff();
+            break;
+        case 20:
+            staffManagement();
+            break;
+        default:
+            system("cls");
+            cout << "Your input not found!" << endl;
+            dataStaff();
+    }
+};
 void trackingStaff(){};
 
 void serviceReport(){
@@ -458,9 +503,10 @@ void nextQueue(){
     cout << "======== Next Queue  ========" << endl;
     cout << "=============================" << endl;
     cout << "Code" << " || " << "Customer Name"  << endl;
+    // Todo Sort Queue Code
     for(int a=0; a < nQueue; a++){
         if("waiting" == db_transaksi[a][5]){
-            cout << db_transaksi[a][1] << " || " << db_transaksi[a][2]  << endl;
+            cout << db_transaksi[a][2] << " || " << db_transaksi[a][1]  << endl;
         }
     }
     cout << "=============================" << endl;
@@ -577,6 +623,7 @@ void queueManagement() {
     cout << "=============================" << endl;
     cout << "" << endl;
     cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "1. Add Queue" << endl;
     cout << "2. Next Queue" << endl;
     cout << "3. Done Queue" << endl;
