@@ -9,6 +9,7 @@
 #include <windows.h>
 using namespace std;
 
+// ===== Data =====
 string db_userAccount[6][5] = {
     // idUser, nama,  password, role, idKaryawan
     {"UR-1", "admin", "admin123", "admin", "-"},
@@ -42,21 +43,39 @@ string db_transaksi[100][7] = {
     // {"QU-1",  "asep", "25122024-10001", "SF-1", "LS-3", "wating", "ST-2"}
 };
 string db_userlogin[5];
+// ===== Variabel =====
 int nQueue = 0;
 string codeQueue;
 int acQueue = 0;
 int doQueue = 0;
 
+// ===== RUN =====
+int main();
+// ===== AUTH FUNCTION =====
+void logout(); 
 void login();
+// ===== MENU ADMIN =====
 void menuAdmin();
-void menuStaff();
 void staffManagement();
 void serviceReport();
+// ===== FUNCTION ADMIN =====
+void editStaff();
+void dataStaff();
+void dataShift();
+void reportService();
+void trackingStaff();
+// ===== MENU STAFF =====
+void menuStaff();
 void queueManagement();
 void bookingManagement(); 
-void logout(); 
-
-void dataStaff();
+// ===== STAFF ADMIN =====
+void addQueue();
+void nextQueue();
+void doneQueue();
+void listQueue();
+void newBooking();
+void confBooking();
+void timeTabel();
 
 // =============== UNIVERSAL FUNCTION ===============
 string idShift(string time) {
@@ -167,11 +186,17 @@ void logout(){
 void menuAdmin () {
     system("cls");
     int choice;
+    cout << "=============================" << endl;
+    cout << "====== Welcome  Admin  ======" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "Welcome Admin" << endl;
     cout << "1. Staff Management" << endl;
     cout << "2. Service Report" << endl;
     cout << "99. Logout" << endl;
     cout << "0. Quit" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter Your Choice : ";
     cin >> choice;
 
@@ -298,12 +323,17 @@ void dataShift() {
 void staffManagement(){    
     system("cls");
     int choice;
-    cout << "Staff Management" << endl;
+    cout << "=============================" << endl;
+    cout << "===== Staff Management  =====" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "1. Data Staff" << endl;
     cout << "2. Data Shift" << endl;
     cout << "10. Menu" << endl;
     cout << "99. Logout" << endl;
     cout << "0. Quit" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter Your Choice : ";
     cin >> choice;
 
@@ -426,12 +456,17 @@ void trackingStaff(){
 void serviceReport(){
     system("cls");
     int choice;
-    cout << "Service Report" << endl;
+    cout << "=============================" << endl;
+    cout << "====== Service Report  ======" << endl;
+    cout << "=============================" << endl;
+    cout << "" << endl;
     cout << "1. Report Customer" << endl;
     cout << "2. Tracking Staff" << endl;
     cout << "10. Menu" << endl;
     cout << "99. Logout" << endl;
     cout << "0. Quit" << endl;
+    cout << "" << endl;
+    cout << "=============================" << endl;
     cout << "Enter Your Choice : ";
     cin >> choice;
 
@@ -462,7 +497,7 @@ void menuStaff() {
     system("cls");
     int choice;
     cout << "=============================" << endl;
-    cout << "===== Welcome to Staff  =====" << endl;
+    cout << "====== Welcome  Staff  ======" << endl;
     cout << "=============================" << endl;
     cout << "" << endl;
     cout << "1. Queue Management" << endl;
