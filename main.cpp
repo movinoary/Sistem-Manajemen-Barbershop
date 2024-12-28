@@ -1,6 +1,11 @@
 #include <iostream>
 #include <string>
+#include <ctime>
+#include <iomanip>
 using namespace std;
+
+// Variable untuk datetime
+string currentDateTime;
 
 // Maksimal jumlah data
 const int MAX_STAFF = 10;
@@ -34,6 +39,11 @@ void addStaff();
 void viewStaff();
 void setShift();
 
+// Fungsi untuk fitur report
+void viewReportDaily();
+void viewReportStaff();
+void viewStaffPerformance();
+
 // Fungsi untuk fitur Staff
 void manageQueue(string staffID);
 void viewQueue();
@@ -41,6 +51,9 @@ void setStatusQueue(string staffID);
 
 // Fungsi login staff
 bool loginStaff(string &staffID);
+
+// Fungsi untuk datetime
+void updateDateTime();
 
 int main()
 {
@@ -92,7 +105,10 @@ void adminMenu()
         cout << "1. Tambah Staff" << endl;
         cout << "2. Lihat Data Staff" << endl;
         cout << "3. Atur Shift" << endl;
-        cout << "4. Kembali ke Menu Utama" << endl;
+        cout << "4. Laporan Harian" << endl;
+        cout << "5. Laporan Per Staff" << endl;
+        cout << "6. Kinerja Staff" << endl;
+        cout << "7. Kembali ke Menu Utama" << endl;
         cout << "Pilih menu: ";
         cin >> choice;
 
@@ -108,11 +124,20 @@ void adminMenu()
             setShift();
             break;
         case 4:
+            viewReportDaily();
+            break;
+        case 5:
+            viewReportStaff();
+            break;
+        case 6:
+            viewStaffPerformance();
+            break;
+        case 7:
             return;
         default:
             cout << "Pilihan tidak valid. Coba lagi!" << endl;
         }
-    } while (choice != 4);
+    } while (choice != 7);
 }
 
 void addStaff()
@@ -186,6 +211,87 @@ void setShift()
     }
 
     cout << "Staff dengan ID " << id << " tidak ditemukan." << endl;
+}
+
+void viewReportDaily()
+{
+    string targetDate;
+    cout << "\n==== Laporan Harian ====" << endl;
+    cout << "Masukkan tanggal (YYYYMMDD): ";
+    cin >> targetDate;
+
+    int totalCustomers = 0;
+
+    cout << "\nLaporan Tanggal " << targetDate << endl;
+    cout << "--------------------------------" << endl;
+
+    for (int i = 0; i < reportCount; i++)
+    {
+        if (reports[i][0].substr(0, 8) == targetDate)
+        {
+            totalCustomers++;
+        }
+    }
+
+    cout << "Total pelanggan: " << totalCustomers << endl;
+}
+
+void viewReportStaff()
+{
+    string staffID;
+    cout << "\n==== Laporan Per Staff ====" << endl;
+    cout << "Masukkan ID Staff: ";
+    cin >> staffID;
+
+    int totalCustomers = 0;
+
+    // Mencari nama staff
+    string staffName;
+    for (int i = 0; i < staffCount; i++)
+    {
+        if (staff[i][0] == staffID)
+        {
+            staffName = staff[i][1];
+            break;
+        }
+    }
+
+    cout << "\nLaporan Staff: " << staffName << " (ID: " << staffID << ")" << endl;
+    cout << "--------------------------------" << endl;
+
+    for (int i = 0; i < reportCount; i++)
+    {
+        if (reports[i][1] == staffID)
+        {
+            totalCustomers++;
+            cout << "Pelanggan: " << reports[i][2] << ", Layanan: " << reports[i][3] << endl;
+        }
+    }
+
+    cout << "\nTotal pelanggan dilayani: " << totalCustomers << endl;
+}
+
+void viewStaffPerformance()
+{
+    cout << "\n==== Kinerja Staff ====" << endl;
+    cout << "--------------------------------" << endl;
+
+    // Hitung total pelanggan per staff
+    for (int i = 0; i < staffCount; i++)
+    {
+        int customerCount = 0;
+        for (int j = 0; j < reportCount; j++)
+        {
+            if (reports[j][1] == staff[i][0])
+            {
+                customerCount++;
+            }
+        }
+        cout << "Staff: " << staff[i][1] << " (ID: " << staff[i][0] << ")" << endl;
+        cout << "Total pelanggan dilayani: " << customerCount << endl;
+        cout << "Shift: " << staff[i][4] << endl;
+        cout << "--------------------------------" << endl;
+    }
 }
 
 bool loginStaff(string &staffID)
@@ -295,6 +401,8 @@ void setStatusQueue(string staffID)
                     queue[i][3] = "Selesai"; // Mengubah status antrian menjadi "Selesai"
                     viewQueue();
 
+                    updateDateTime(); // Update waktu saat ini
+                    reports[reportCount][0] = currentDateTime;
                     reports[reportCount][1] = staffID;
                     reports[reportCount][2] = queue[i][1];
                     reports[reportCount][3] = queue[i][2];
@@ -342,4 +450,14 @@ void viewQueue()
         cout << "Nomor: " << queue[i][0] << ", Nama: " << queue[i][1]
              << ", Layanan: " << queue[i][2] << ", Status Antrian: " << queue[i][3] << endl;
     }
+}
+
+void updateDateTime()
+{
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+
+    char datetime[20];
+    strftime(datetime, sizeof(datetime), "%Y%m%d %H:%M", ltm);
+    currentDateTime = datetime;
 }
