@@ -13,6 +13,7 @@
         "utility": "cpp",
         "random": "cpp",
         "text_encoding": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "cmath": "cpp"
     }
 }

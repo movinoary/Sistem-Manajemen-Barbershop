@@ -1,13 +1,15 @@
-#include <cmath>
-#include <cstdio>
-#include <vector>
 #include <iostream>
-#include <algorithm>
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <windows.h>
 using namespace std;
+
+// ===== Variabel =====
+int nQueue = 0;
+string codeQueue;
+int acQueue = 0;
+int doQueue = 0;
+const int toLine = 50;
+const int toListMenu = 22;
 
 // ===== Data =====
 string db_userAccount[6][5] = {
@@ -42,12 +44,32 @@ string db_transaksi[100][7] = {
     // idQueue, nama,  code, Shift, Name Service, status, Staff Name
     // {"QU-1",  "asep", "25122024-10001", "SF-1", "LS-3", "wating", "ST-2"}
 };
+string listMenu[toListMenu][3] = {
+    // id, code, title
+    {"99", "99", "quit"},
+    {"88", "88", "logout"},
+    {"01", "1", "login"},
+    {"02", "10", "Menu Admin"},
+    {"03", "1", "Staff Management"},
+    {"04", "2", "Service Report"},
+    {"05", "1", "editStaff"},
+    {"06", "1", "Data Staff"}, 
+    {"07", "2", "Data Shift"}, 
+    {"08", "1", "Report Service"},
+    {"09", "2", "Tracking Staff"}, 
+    {"10", "10", "menuStaff"},
+    {"11", "1", "Queue Management"},
+    {"12", "2", "Booking Management"},
+    {"13", "1", "addQueue"},
+    {"14", "2", "nextQueue"},
+    {"15", "3", "doneQueue"},
+    {"16", "4", "listQueue"},
+    {"17", "1", "New Booking"},
+    {"18", "2", "Confirmation Booking"},
+    {"19", "3", "Time Table"},
+    {"77", "77", "Back"},
+};
 string db_userlogin[5];
-// ===== Variabel =====
-int nQueue = 0;
-string codeQueue;
-int acQueue = 0;
-int doQueue = 0;
 
 // ===== RUN =====
 int main();
@@ -98,32 +120,199 @@ string nameSatff(const string& idStaff) {
     }
     return name;
 };
+// ===== VIEW =====
+void printView(int e) {
+    for (int i = 0; i < e; i++) {
+        cout << "=";
+    }
+}
+void printHeader(const string& title) {
+    int lineTitle = (toLine - title.length()) / 2;
+    system("cls");
+    cout << endl;
+    printView(toLine);
+    cout << endl;
+    printView(lineTitle);
+    cout << title;
+    printView(lineTitle);
+    cout << endl;
+    printView(toLine);
+    cout << endl;
+}
+void printMenuTop(){
+    cout << endl;
+    printView(toLine);
+    cout << endl;
+    cout << endl;
+}
+void printMenuBottom() {
+    cout << endl;
+    printView(toLine);
+    cout << endl;
+    cout << "Enter Your Choice: ";
+}
+void loopMenu(int length, const string view[]) {
+    for (int i = 0; i < length; i++) {
+        for (int a = 0; a < toListMenu; a++) {
+            if (view[i] == listMenu[a][0]) {
+                cout << listMenu[a][1] << " - " << listMenu[a][2] << endl;
+            }
+        }
+    }
+}
+void printMenu(const string& type) {
+    const string mainMenu[] = {"01", "99"};
+    const string menuAdmin[] = {"03", "04", "88", "99"};
+    const string dataStaff[] = {"05", "02", "77", "88", "99"};
+    const string dataShift[] = {"02", "77", "88", "99"};
+    const string staffManagement[] = {"06", "07", "02", "88", "99"};
+    const string reportService[] = {"77", "88", "99"};
+    const string trackingStaff[] = {"77", "88", "99"};
+    const string serviceReport[] = {"08", "09", "02", "88", "99"};
+    const string menuStaff[] = {"11", "12", "88", "99"};
+    const string queueManagement[] = {"13", "14", "15", "16", "10", "88", "99"};
+    const string bookingManagement[] = {"17", "18", "19", "10", "88", "99"};
+
+    if (type == "main") {
+        printMenuTop();
+        loopMenu(2, mainMenu);
+    } else if (type == "menuAdmin") {
+        printMenuTop();
+        loopMenu(4, menuAdmin);
+    } else if (type == "dataStaff") {
+        printMenuTop();
+        loopMenu(5, dataStaff);
+    } else if (type == "dataShift") {
+        printMenuTop();
+        loopMenu(4, dataShift);
+    } else if (type == "staffManagement") {
+        printMenuTop();
+        loopMenu(5, staffManagement);
+    } else if (type == "reportService") {
+        printMenuTop();
+        loopMenu(3, reportService);
+    } else if (type == "trackingStaff") {
+        printMenuTop();
+        loopMenu(3, trackingStaff);
+    } else if (type == "serviceReport") {
+        printMenuTop();
+        loopMenu(5, serviceReport);
+    } else if (type == "menuStaff") {
+        printMenuTop();
+        loopMenu(4, menuStaff);
+    } else if (type == "queueManagement") {
+        printMenuTop();
+        loopMenu(7, queueManagement);
+    } else if (type == "bookingManagement") {
+        printMenuTop();
+        loopMenu(6, bookingManagement);
+    }
+    printMenuBottom();
+}
+void route(const string& type, int number) {
+    if (type == "main") {
+        switch (number) {
+            case 1: login(); break;
+            case 99: break;
+            default: main(); break;
+        }
+    } else if (type == "menuAdmin") {
+        switch (number) {
+            case 1: staffManagement(); break;
+            case 2: serviceReport(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: menuAdmin(); break;
+        }
+    } else if (type == "dataStaff") {
+        switch (number) {
+            case 1: editStaff(); break;
+            case 77: staffManagement(); break;
+            case 10: menuAdmin(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: dataStaff(); break;
+        }
+    } else if (type == "dataShift") {
+        switch (number) {
+            case 10: menuAdmin(); break;
+            case 77: staffManagement(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: dataShift(); break;
+        }
+    } else if (type == "staffManagement") {
+        switch (number) {
+            case 1: dataStaff(); break;
+            case 2: dataShift(); break;
+            case 10: menuAdmin(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: staffManagement(); break;
+        }
+    } else if (type == "reportService") {
+        switch (number) {
+            case 77: serviceReport(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: reportService(); break;
+        }
+    } else if (type == "trackingStaff") {
+        switch (number) {
+            case 77: serviceReport(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: trackingStaff(); break;
+        }
+    } else if (type == "serviceReport") {
+        switch (number) {
+            case 1: reportService(); break;
+            case 2: trackingStaff(); break;
+            case 10: menuAdmin(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: serviceReport(); break;
+        }
+    } else if (type == "menuStaff") {
+        switch (number) {
+            case 1: queueManagement(); break;
+            case 2: bookingManagement(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: menuStaff(); break;
+        }
+    } else if (type == "queueManagement") {
+        switch (number) {
+            case 1: addQueue(); break;
+            case 2: nextQueue(); break;
+            case 3: doneQueue(); break;
+            case 4: listQueue(); break;
+            case 10: menuStaff(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: queueManagement(); break;
+        }
+    } else if (type == "bookingManagement") {
+        switch (number) {
+            case 1: newBooking(); break;
+            case 2: confBooking(); break;
+            case 3: timeTabel(); break;
+            case 10: menuStaff(); break;
+            case 88: logout(); main(); break;
+            case 99: break;
+            default: bookingManagement(); break;
+        }
+    }
+}
 
 // =============== RUN ===============
 int main() {
     int choice;
-    cout << "=============================" << endl;
-    cout << "=== Welcome to App Barber ===" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. Login" << endl;
-    cout << "0. Quit" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "Enter Your Choice : ";
+    printHeader(" Welcome to App Barber ");
+    printMenu("main");
     cin >> choice;
 
-    switch (choice){
-    case 1:
-        login();
-        break;
-    case 0:
-        break;
-    default:
-        system("cls");
-        cout << "Your input not found!" << endl;
-        main();
-    }
+    route("main", choice);
     
     return 0;
 }
@@ -157,9 +346,9 @@ void login() {
 
     if (!found) {
         system("cls");
-        cout << "=============================" << endl;
+        printView(toLine);
         cout << "===" << message << "===" << endl;
-        cout << "=============================" << endl;
+        printView(toLine);
         main();
     } else {
         if(db_userlogin[3] == "admin"){
@@ -174,9 +363,9 @@ void login() {
 
 void logout(){
     system("cls");
-        cout << "=============================" << endl;
+        printView(toLine);
         cout << "=== Thankyou for coming! ====" << endl;
-        cout << "=============================" << endl;
+        printView(toLine);
         for(int a=0; a < 5; a++){
         db_userlogin[a] = "";
     }
@@ -184,39 +373,12 @@ void logout(){
 
 // =============== MENU ADMIN ===============
 void menuAdmin () {
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "====== Welcome  Admin  ======" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "Welcome Admin" << endl;
-    cout << "1. Staff Management" << endl;
-    cout << "2. Service Report" << endl;
-    cout << "99. Logout" << endl;
-    cout << "0. Quit" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "Enter Your Choice : ";
+    printHeader(" Welcome  Admin ");
+    printMenu("menuAdmin");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            staffManagement();
-            break;
-        case 2:
-            serviceReport();
-            break;
-        case 99:
-            logout();
-            main();
-        case 0:
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            menuAdmin();
-    }
+    route("menuAdmin", choice);
 }
 
 // =============== STAFF FUNCTION
@@ -230,12 +392,12 @@ void editStaff() {
     cin >> name;
     cout << "Enter Status: ";
     cin >> status;
-    cout << "=============================" << endl;
+    printView(toLine);
     cout <<  " || "  << "ID Shift" << " || " << "Start Time"  << " - " << "End Time" <<  " || "  <<  endl;
     for(int a=0; a < 2; a++){
         cout <<  " || " <<   db_dataShift[a][0] << " || " << db_dataShift[a][1] << " - " << db_dataShift[a][7] <<  " || "  << endl;
     }
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "Enter ID Shift: ";
     cin >> shift;
 
@@ -247,11 +409,8 @@ void editStaff() {
 }
 
 void dataStaff() {
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "======== List Staff  ========" << endl;
-    cout << "=============================" << endl;
+    printHeader(" List Staff ");
     cout <<  " || " << "No" << " || " << "Full Name"  << " || " << "Status"  <<  " || " << "Shift"  <<  " || " <<  endl;
     for(int a=0; a < 4; a++){
         cout <<  " || " << a << " || ";
@@ -260,37 +419,16 @@ void dataStaff() {
         }
         cout << endl;
     }
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. Edit Staff" << endl;
-    cout << "20. Back" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
+    printView(toLine);
 
-    cout << "" << endl;
-    cout << "Enter Your Choice : ";
+    printMenu("dataStaff");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            editStaff();
-            break;
-        case 20:
-            staffManagement();
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            dataStaff();
-    }
+    route("dataStaff", choice);
 }
 void dataShift() {
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "======== List Shift  ========" << endl;
-    cout << "=============================" << endl;
-    cout << "=============================" << endl;
+    printHeader(" List Shift ");
     cout << "ID Shift" << " || " << "Start Time"  << " - " << "End Time" <<  " || " << "Staff Operation"<< endl;
     for(int a=0; a < 2; a++){
         cout <<  db_dataShift[a][0] << " || " << db_dataShift[a][1] << " - " << db_dataShift[a][7] << " || ";
@@ -301,68 +439,27 @@ void dataShift() {
         }
         cout << endl;
     }
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "20. Back" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "Enter Your Choice : ";
+    printView(toLine);
+    printMenu("dataShift");
     cin >> choice;
 
-    switch (choice){
-        case 20:
-            staffManagement();
-            break;
-        default:
-            cout << "Your input not found!" << endl;
-            dataShift();
-    }
+    route("dataShift", choice);
 };
 
 void staffManagement(){    
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "===== Staff Management  =====" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. Data Staff" << endl;
-    cout << "2. Data Shift" << endl;
-    cout << "10. Menu" << endl;
-    cout << "99. Logout" << endl;
-    cout << "0. Quit" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "Enter Your Choice : ";
+    printHeader(" Staff Management ");
+    printMenu("staffManagement");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            dataStaff();
-            break;
-        case 2:
-            dataShift();
-            break;
-        case 10:
-            menuAdmin();
-            break;
-        case 99:
-            logout();
-            main();
-        case 0:
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            staffManagement();
-    }
+    route("staffManagement", choice);
 }
 
 // =============== REPORT FUNCTION
 void reportService(){
-    system("cls");
     int choice;
+    printHeader(" Report Service ");
+
     for(int i=0; i < 4; i++){
         int totalCustomer = 0;
         for(int a=0; a < nQueue; a++){
@@ -372,48 +469,23 @@ void reportService(){
         }
         db_karyawan[i][4] = to_string(totalCustomer);
     }
-    
-    cout << "=============================" << endl;
-    cout << "====== Report Service  ======" << endl;
-    cout << "=============================" << endl;
+
     cout << "Total Days Customer  : " << nQueue << endl;
-    cout << "====== Staff  Customer ======" << endl;
     cout <<  " || "  << "Full Name"  << " || " << "Total "  <<  " || " << "Shift"  <<  " || " <<  endl;
     for(int a=0; a < 4; a++){
         cout <<  " || " <<   db_karyawan[a][1] << " || " << db_karyawan[a][4] << " || " << db_karyawan[a][3] <<  " || "  << endl;
     }
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. Edit Staff" << endl;
-    cout << "20. Back" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-
-    cout << "" << endl;
-    cout << "Enter Your Choice : ";
+    printView(toLine);
+    printMenu("reportService");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            editStaff();
-            break;
-        case 20:
-            staffManagement();
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            dataStaff();
-    }
+    route("reportService", choice);
 };
 void trackingStaff(){
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "====== Tracking Staff  ======" << endl;
-    cout << "=============================" << endl;
+    printHeader(" Tracking Staff ");
+
     cout << "Total Days Customer  : " << nQueue << endl;
-    cout << "====== Staff  Customer ======" << endl;
     cout <<  " || " << "Ranking"  <<  " || " <<  "Full Name"  << " || " << "Total "  <<  " || " << "Shift"  <<  " || " <<  endl;
     for (int i = 0; i < 4 - 1; i++) {
         for (int j = 0; j < 4 - i - 1; j++) {
@@ -427,119 +499,47 @@ void trackingStaff(){
         }
         cout << " || " << i << " || " << db_karyawan[i][1] << " || " << db_karyawan[i][4] << "/" << nQueue << " || " << db_karyawan[i][3] << " || " << endl;
     }
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "" << endl;
     cout << "1. Edit Staff" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-    cout << "=============================" << endl;
-
-    cout << "" << endl;
-    cout << "Enter Your Choice : ";
+    printView(toLine);
+    
+    printMenu("trackingStaff");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            editStaff();
-            break;
-        case 20:
-            serviceReport();
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            trackingStaff();
-    }
-
+    route("reportService", choice);
 };
 
 void serviceReport(){
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "====== Service Report  ======" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. Report Customer" << endl;
-    cout << "2. Tracking Staff" << endl;
-    cout << "10. Menu" << endl;
-    cout << "99. Logout" << endl;
-    cout << "0. Quit" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "Enter Your Choice : ";
+    printHeader(" Service Report ");
+    printMenu("serviceReport");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            reportService();
-            break;
-        case 2:
-            trackingStaff();
-            break;
-        case 10:
-            menuAdmin();
-            break;
-        case 99:
-            logout();
-            main();
-        case 0:
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            serviceReport();
-    }
+    route("serviceReport", choice);
 }
 
 // =============== MENU STAFF ===============
 void menuStaff() {
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "====== Welcome  Staff  ======" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. Queue Management" << endl;
-    cout << "2. Booking Management" << endl;
-    cout << "99. Logout" << endl;
-    cout << "0. Quit" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "Enter Your Choice : ";
+    printHeader(" Welcome  Staff ");
+    printMenu("menuStaff");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            queueManagement();
-            break;
-        case 2:
-            bookingManagement();
-            break;
-        case 99:
-            logout();
-            main();
-        case 0:
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            menuStaff();
-    }
+    route("menuStaff", choice);
 }
 
 // =============== QUEUE FUNCTION
 void addQueue(){
-    system("cls");
+    printHeader(" Add Queue ");
     string name, date, time;
     int service;
-    cout << "=============================" << endl;
-    cout << "========= Add Queue  ========" << endl;
-    cout << "=============================" << endl;
     cout << "" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "Enter name: ";
     cin >> name;
 
@@ -576,12 +576,9 @@ void addQueue(){
     queueManagement();
 };
 void nextQueue(){
-    system("cls");
+    printHeader(" Next Queue ");
     string code, staff;
     bool isFound = false;
-    cout << "=============================" << endl;
-    cout << "======== Next Queue  ========" << endl;
-    cout << "=============================" << endl;
     cout << "Code" << " || " << "Customer Name"  << endl;
     // Todo Sort Queue Code
     for(int a=0; a < nQueue; a++){
@@ -589,22 +586,22 @@ void nextQueue(){
             cout << db_transaksi[a][2] << " || " << db_transaksi[a][1]  << endl;
         }
     }
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-        cout << "=============================" << endl;
+        printView(toLine);
     cout << "Enter Code : ";
     cin >> code;
     if (code == "20") {
         return queueManagement();
     }
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "Code" << " || " << "Staff Name"  << endl;
     for(int a=0; a < 4; a++){
         cout << db_karyawan[a][0] << " || " << db_karyawan[a][1]  << endl;
     }
-    cout << "=============================" << endl;
+    printView(toLine);
 
     cout << "Staff Code : ";
     cin >> staff;
@@ -625,23 +622,20 @@ void nextQueue(){
     queueManagement();
 };
 void doneQueue(){
-    system("cls");
+    printHeader(" Done Queue ");
     string code;
     bool isFound = false;
-    cout << "=============================" << endl;
-    cout << "======== Done Queue  ========" << endl;
-    cout << "=============================" << endl;
     cout << "Code" << " || " << "Customer Name"  << endl;
     for(int a=0; a < nQueue; a++){
         if("prosess" == db_transaksi[a][5]){
         cout << a << "." << db_transaksi[a][1] << "||" << db_transaksi[a][2]  << endl;
         }
     }
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-    cout << "=============================" << endl;    
+    printView(toLine);    
     cout << "Enter Code : ";
     cin >> code;
 
@@ -662,11 +656,8 @@ void doneQueue(){
     queueManagement();
 };
 void listQueue(){
-    system("cls");
+    printHeader(" List Queue ");
     int choice;
-    cout << "=============================" << endl;
-    cout << "======== List Queue  ========" << endl;
-    cout << "=============================" << endl;
     cout << "idQueue" << " || " << "Customer Name"  << " || " << "Customer Code"  <<  " || " << "Shift"  << " || " << "Service" << " || " << "Status"  << " || " << "Staff" <<  endl;
     for(int a=0; a < nQueue; a++){
         cout << a;
@@ -675,11 +666,11 @@ void listQueue(){
         }
         cout << endl;
     }
-   cout << "=============================" << endl;
+   printView(toLine);
     cout << "" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-    cout << "=============================" << endl;
+    printView(toLine);
 
     cout << "" << endl;
     cout << "Enter Your Choice : ";
@@ -691,69 +682,28 @@ void listQueue(){
 };
 
 void queueManagement() {
-    system("cls");
     int choice;
-    cout << "=============================" << endl;
-    cout << "===== Queue Management  =====" << endl;
-    cout << "=============================" << endl;
+    printHeader(" Queue Management ");
     cout << "Queue : " << codeQueue << endl;
     cout << "Active Queue : " << acQueue << endl;
     cout << "Done Queue : " << doQueue << endl;
     cout << "Total Queue : " << nQueue << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. Add Queue" << endl;
-    cout << "2. Next Queue" << endl;
-    cout << "3. Done Queue" << endl;
-    cout << "4. List Queue" << endl;
-    cout << "10. Menu" << endl;
-    cout << "99. Logout" << endl;
-    cout << "0. Quit" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "Enter Your Choice : ";
+    printMenu("queueManagement");
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            addQueue();
-            break;
-        case 2:
-            nextQueue();
-            break;
-        case 3:
-            doneQueue();
-        case 4:
-            listQueue();
-        case 10:
-            menuStaff();
-        case 99:
-            logout();
-            main();
-        case 0:
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            queueManagement();
-    }
+    route("queueManagement", choice);
 };
 
 // =============== BOOKING FUNCTION
 void newBooking() {
-    system("cls");
+    printHeader(" New Booking ");
     string name, date, time;
     int service;
-    cout << "=============================" << endl;
-    cout << "======= New Booking   =======" << endl;
-    cout << "=============================" << endl;
+
     cout << "" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "Enter name: ";
     cin >> name;
 
@@ -791,10 +741,9 @@ void newBooking() {
 };
 void confBooking() {
 system("cls");
+    printHeader(" Confirmation Booking ");
     string code, staff;
-    cout << "=============================" << endl;
-    cout << "=== Confirmation Booking  ===" << endl;
-    cout << "=============================" << endl;
+
     bool isFound = false;
     cout << "Code" << " || " << "Customer Name"  << endl;
     for(int a=0; a < nQueue; a++){
@@ -802,11 +751,11 @@ system("cls");
             cout << db_transaksi[a][1] << " || " << db_transaksi[a][2]  << endl;
         }
     }
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "Enter Code : ";
     cin >> code;
     if (code == "20") {
@@ -821,20 +770,17 @@ system("cls");
     return bookingManagement();
 };
 void timeTabel() {
-    system("cls");
-    cout << "=============================" << endl;
-    cout << "======== Time Tabel  ========" << endl;
-    cout << "=============================" << endl;
+    printHeader(" Time Tabel ");
     int choice;
     for(int a=0; a < 4; a++){
         cout << db_karyawan[a][0] << " || " << db_karyawan[a][1]  << endl;
     }
 
-    cout << "=============================" << endl;
+    printView(toLine);
     cout << "" << endl;
     cout << "20. Back" << endl;
     cout << "" << endl;
-    cout << "=============================" << endl;
+    printView(toLine);
 
     cout << "" << endl;
     cout << "Enter Your Choice : ";
@@ -846,42 +792,10 @@ void timeTabel() {
 };
 
 void bookingManagement() {
-    system("cls");
+    printHeader(" Booking Management ");
+    printMenu("bookingManagement");
     int choice;
-    cout << "=============================" << endl;
-    cout << "==== Booking Management  ====" << endl;
-    cout << "=============================" << endl;
-    cout << "" << endl;
-    cout << "1. New Booking" << endl;
-    cout << "2. Confirmation Booking" << endl;
-    cout << "3. Timetable " << endl;
-    cout << "10. Menu" << endl;
-    cout << "99. Logout" << endl;
-    cout << "0. Quit" << endl;
-    cout << "" << endl;
-    cout << "=============================" << endl;
-    cout << "Enter Your Choice : ";
     cin >> choice;
 
-    switch (choice){
-        case 1:
-            newBooking();
-            break;
-        case 2:
-            confBooking();
-            break;
-        case 3:
-            timeTabel();
-        case 10:
-            menuStaff();
-        case 99:
-            logout();
-            main();
-        case 0:
-            break;
-        default:
-            system("cls");
-            cout << "Your input not found!" << endl;
-            bookingManagement();
-    }
+    route("bookingManagement", choice);
 };
