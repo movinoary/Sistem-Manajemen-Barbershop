@@ -1,463 +1,362 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
 #include <iostream>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
 #include <string>
-#include <ctime>
-#include <iomanip>
+#include <windows.h>
 using namespace std;
 
-// Variable untuk datetime
-string currentDateTime;
+string db_userAccount[5][5] = {
+    // idUser, nama,  password, role, idKaryawan
+    {"UR-01", "admin", "admin123", "admin", "-"},
+    {"UR-02", "adit", "adit123", "staff", "ST-01"},
+    {"UR-03", "alif", "alif123", "staff", "ST-02"},
+    {"UR-04", "sisil", "sisil123", "staff", "ST-03"},
+    {"UR-05", "vino", "vino123", "staff", "ST-04"}
+};
+string db_karyawan[4][4] = {
+    // idKaryawan, namaLengkap, statusKerja, idShift
+    {"ST-01", "Adit Praditia" "active", "SF-01"},
+    {"ST-02", "Muhammad Nur Alif", "active", "SF-01"},
+    {"ST-03", "Suci Fransica Sisilia", "active", "SF-02"},
+    {"ST-04", "Mohammad Vino Arystio", "active", "SF-02"}
+};
+string db_dataShift[2][3] = {
+    // idShift, waktuMulai, waktuAkhir, 
+    {"SF-01", "08:00", "14:00"},
+    {"SF-02", "14:00", "20:00"}
+};
+string db_istService[4][3] = {
+    // idService, jenisLayanan, harga
+    {"LS-01", "Cukur Anak-anak", "30000"},
+    {"LS-02", "Cukur Anak-anak + Cuci", "35000"},
+    {"LS-03", "Cukur Dewasa", "40000"},
+    {"LS-04", "Cukur Dewasa + Cuci", "45000"},
+};
+string db_customer[0][3] = {
+    // idCustomer, nama, customerRating
+    // {"CS-01", "asep", "7"}
+};
+string db_queue[0][5] = {
+    // idQueue, number, idCustomer, idShift, idService, status
+    // {"QU-01", "25122024-10001" "CS-01", "SF-01", "LS-03", "wating"}
+};
+string db_userlogin[5];
 
-// Maksimal jumlah data
-const int MAX_STAFF = 10;
-const int MAX_QUEUE = 20;
-const int MAX_BOOKINGS = 20;
-const int MAX_REPORT = 1000;
+void login();
+void menuAdmin();
+void menuStaff();
+void staffManagement();
+void serviceReport();
+void queueManagement();
+void bookingManagement(); 
+void logout(); 
 
-// Struktur data untuk staff
-string staff[MAX_STAFF][5]; // [ID, Nama, Password, Status Aktif, Shift]
-int staffCount = 0;
+int main() {
+    int choice;
+    cout << "1. Login" << endl;
+    cout << "0. Quit" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
 
-// Struktur data untuk antrian pelanggan
-string queue[MAX_QUEUE][4]; // [Nomor Antrian, Nama Pelanggan, Jenis Layanan, Status]
-int queueCount = 0;
-
-// Struktur data untuk booking
-string bookings[MAX_BOOKINGS][3]; // [Nama Pelanggan, Tanggal & Jam, Jenis Layanan]
-int bookingCount = 0;
-
-// Struktur data untuk report
-string reports[MAX_REPORT][4]; // [Tanggal & Jam, ID Staff, Nama Pelanggan, Jenis Layanan]
-int reportCount = 0;
-
-// Fungsi untuk menampilkan menu utama
-void showMenu();
-void adminMenu();
-void staffMenu(string staffID);
-
-// Fungsi untuk fitur Admin
-void addStaff();
-void viewStaff();
-void setShift();
-
-// Fungsi untuk fitur report
-void viewReportDaily();
-void viewReportStaff();
-void viewStaffPerformance();
-
-// Fungsi untuk fitur Staff
-void manageQueue(string staffID);
-void viewQueue();
-void setStatusQueue(string staffID);
-
-// Fungsi login staff
-bool loginStaff(string &staffID);
-
-// Fungsi untuk datetime
-void updateDateTime();
-
-int main()
-{
-    showMenu();
+    switch (choice){
+    case 1:
+        login();
+        break;
+    case 0:
+        cout << "Thankyou for coming!";
+        break;
+    default:
+        system("cls");
+        cout << "Your input not found!" << endl;
+        main();
+    }
+    
     return 0;
 }
 
-void showMenu()
-{
-    int choice;
-    do
-    {
-        cout << "\n==== Sistem Manajemen Barbershop ====" << endl;
-        cout << "1. Admin" << endl;
-        cout << "2. Staff" << endl;
-        cout << "3. Keluar" << endl;
-        cout << "Pilih menu: ";
-        cin >> choice;
 
-        switch (choice)
-        {
-        case 1:
-            adminMenu();
-            break;
-        case 2:
-        {
-            string staffID;
-            if (loginStaff(staffID))
-            {
-                staffMenu(staffID);
-            }
-            break;
-        }
-        case 3:
-            cout << "Keluar dari sistem. Terima kasih!" << endl;
-            break;
-        default:
-            cout << "Pilihan tidak valid. Coba lagi!" << endl;
-        }
-    } while (choice != 3);
-}
-
-void adminMenu()
-{
-    int choice;
-    do
-    {
-        cout << "\n==== Menu Admin ====" << endl;
-        cout << "1. Tambah Staff" << endl;
-        cout << "2. Lihat Data Staff" << endl;
-        cout << "3. Atur Shift" << endl;
-        cout << "4. Laporan Harian" << endl;
-        cout << "5. Laporan Per Staff" << endl;
-        cout << "6. Kinerja Staff" << endl;
-        cout << "7. Kembali ke Menu Utama" << endl;
-        cout << "Pilih menu: ";
-        cin >> choice;
-
-        switch (choice)
-        {
-        case 1:
-            addStaff();
-            break;
-        case 2:
-            viewStaff();
-            break;
-        case 3:
-            setShift();
-            break;
-        case 4:
-            viewReportDaily();
-            break;
-        case 5:
-            viewReportStaff();
-            break;
-        case 6:
-            viewStaffPerformance();
-            break;
-        case 7:
-            return;
-        default:
-            cout << "Pilihan tidak valid. Coba lagi!" << endl;
-        }
-    } while (choice != 7);
-}
-
-void addStaff()
-{
-    if (staffCount >= MAX_STAFF)
-    {
-        cout << "Data staff penuh! Tidak bisa menambahkan lebih banyak." << endl;
-        return;
-    }
-
-    cout << "\n==== Tambah Staff ====" << endl;
-    cout << "Masukkan ID Staff: ";
-    cin >> staff[staffCount][0];
-    cout << "Masukkan Nama Staff: ";
-    cin.ignore();
-    getline(cin, staff[staffCount][1]);
-    cout << "Masukkan Password Staff: ";
-    cin >> staff[staffCount][2];
-    staff[staffCount][3] = "Aktif";        // Default status aktif
-    staff[staffCount][4] = "Belum diatur"; // Default shift
-
-    staffCount++;
-    cout << "Staff berhasil ditambahkan!" << endl;
-}
-
-void viewStaff()
-{
-    cout << "\n==== Data Staff ====" << endl;
-    if (staffCount == 0)
-    {
-        cout << "Belum ada staff yang terdaftar." << endl;
-        return;
-    }
-
-    for (int i = 0; i < staffCount; i++)
-    {
-        cout << "ID: " << staff[i][0] << ", Nama: " << staff[i][1]
-             << ", Status: " << staff[i][3] << ", Shift: " << staff[i][4] << endl;
-    }
-}
-
-void setShift()
-{
-    string id;
-    cout << "\n==== Atur Shift Staff ====" << endl;
-    cout << "Masukkan ID Staff: ";
-    cin >> id;
-
-    for (int i = 0; i < staffCount; i++)
-    {
-        if (staff[i][0] == id)
-        {
-            cout << "Pilih Shift: \n1. Pagi (08.00-14.00) \n2. Siang (14.00-20.00)\nPilihan: ";
-            int shiftChoice;
-            cin >> shiftChoice;
-            if (shiftChoice == 1)
-            {
-                staff[i][4] = "Pagi";
-            }
-            else if (shiftChoice == 2)
-            {
-                staff[i][4] = "Siang";
-            }
-            else
-            {
-                cout << "Pilihan shift tidak valid." << endl;
-            }
-            cout << "Shift berhasil diatur untuk Staff ID " << id << endl;
-            return;
-        }
-    }
-
-    cout << "Staff dengan ID " << id << " tidak ditemukan." << endl;
-}
-
-void viewReportDaily()
-{
-    string targetDate;
-    cout << "\n==== Laporan Harian ====" << endl;
-    cout << "Masukkan tanggal (YYYYMMDD): ";
-    cin >> targetDate;
-
-    int totalCustomers = 0;
-
-    cout << "\nLaporan Tanggal " << targetDate << endl;
-    cout << "--------------------------------" << endl;
-
-    for (int i = 0; i < reportCount; i++)
-    {
-        if (reports[i][0].substr(0, 8) == targetDate)
-        {
-            totalCustomers++;
-        }
-    }
-
-    cout << "Total pelanggan: " << totalCustomers << endl;
-}
-
-void viewReportStaff()
-{
-    string staffID;
-    cout << "\n==== Laporan Per Staff ====" << endl;
-    cout << "Masukkan ID Staff: ";
-    cin >> staffID;
-
-    int totalCustomers = 0;
-
-    // Mencari nama staff
-    string staffName;
-    for (int i = 0; i < staffCount; i++)
-    {
-        if (staff[i][0] == staffID)
-        {
-            staffName = staff[i][1];
-            break;
-        }
-    }
-
-    cout << "\nLaporan Staff: " << staffName << " (ID: " << staffID << ")" << endl;
-    cout << "--------------------------------" << endl;
-
-    for (int i = 0; i < reportCount; i++)
-    {
-        if (reports[i][1] == staffID)
-        {
-            totalCustomers++;
-            cout << "Pelanggan: " << reports[i][2] << ", Layanan: " << reports[i][3] << endl;
-        }
-    }
-
-    cout << "\nTotal pelanggan dilayani: " << totalCustomers << endl;
-}
-
-void viewStaffPerformance()
-{
-    cout << "\n==== Kinerja Staff ====" << endl;
-    cout << "--------------------------------" << endl;
-
-    // Hitung total pelanggan per staff
-    for (int i = 0; i < staffCount; i++)
-    {
-        int customerCount = 0;
-        for (int j = 0; j < reportCount; j++)
-        {
-            if (reports[j][1] == staff[i][0])
-            {
-                customerCount++;
-            }
-        }
-        cout << "Staff: " << staff[i][1] << " (ID: " << staff[i][0] << ")" << endl;
-        cout << "Total pelanggan dilayani: " << customerCount << endl;
-        cout << "Shift: " << staff[i][4] << endl;
-        cout << "--------------------------------" << endl;
-    }
-}
-
-bool loginStaff(string &staffID)
-{
-    string id, password;
-    cout << "\n==== Login Staff ====" << endl;
-    cout << "Masukkan ID Staff: ";
-    cin >> id;
-    cout << "Masukkan Password: ";
+// =============== AUTH FUNCTION ===============
+void login() {
+    string username, password;
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
     cin >> password;
+    string message = "username tidak ditemukan!";
+    bool found = false;
 
-    for (int i = 0; i < staffCount; i++)
-    {
-        if (staff[i][0] == id && staff[i][2] == password)
-        {
-            staffID = id;
-            cout << "Login berhasil. Selamat datang, " << staff[i][1] << "!" << endl;
-            return true;
+    for (int i = 0; i < 5; i++) {
+        if (username == db_userAccount[i][1]) {
+            found = true;
+            if (password == db_userAccount[i][2]) {
+                for(int a=0; a < 5; a++){
+                    db_userlogin[a] = db_userAccount[i][a];
+                }
+                message = "Login berhasil!\nSelamat Datang " + db_userAccount[i][1];
+            } else {
+                found = false;
+                message = "password tidak sesuai!";
+            }
+            // cout << message << endl;
+            // break;
         }
     }
-    cout << "ID atau Password salah." << endl;
-    return false;
+
+    if (!found) {
+        system("cls");
+        cout << message << endl;
+        main();
+    } else {
+        if(db_userlogin[3] == "admin"){
+            cout << message << endl;
+            menuAdmin();
+        } else if (db_userlogin[3] == "staff"){
+            cout << message << endl;
+            menuStaff();
+        }
+    }
 }
 
-void staffMenu(string staffID)
-{
-    int choice;
-    do
-    {
-        cout << "\n==== Menu Staff ====" << endl;
-        cout << "1. Kelola Antrian" << endl;
-        cout << "2. Lihat Antrian Aktif" << endl;
-        cout << "3. Ubah Status Antrian" << endl;
-        cout << "4. Kembali ke Menu Utama" << endl;
-        cout << "Pilih menu: ";
-        cin >> choice;
+void logout(){
+    system("cls");
+    cout << "Thankyou for coming!" << endl;
+    for(int a=0; a < 5; a++){
+        db_userlogin[a] = "";
+    }
+}
 
-        switch (choice)
-        {
+// =============== MENU ADMIN ===============
+void menuAdmin () {
+    system("cls");
+    int choice;
+    cout << "Welcome Admin" << endl;
+    cout << "1. Staff Management" << endl;
+    cout << "2. Service Report" << endl;
+    cout << "99. Logout" << endl;
+    cout << "0. Quit" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    switch (choice){
         case 1:
-            manageQueue(staffID);
+            staffManagement();
             break;
         case 2:
-            viewQueue();
+            serviceReport();
             break;
-        case 3:
-            setStatusQueue(staffID);
+        case 99:
+            logout();
+            main();
+        case 0:
+            cout << "Thankyou for coming!";
             break;
-        case 4:
-            return;
         default:
-            cout << "Pilihan tidak valid. Coba lagi!" << endl;
-        }
-    } while (choice != 4);
+            system("cls");
+            cout << "Your input not found!" << endl;
+            menuAdmin();
+    }
 }
 
-void manageQueue(string staffID)
-{
-    if (queueCount >= MAX_QUEUE)
-    {
-        cout << "Antrian penuh!" << endl;
-        return;
-    }
+// =============== STAFF FUNCTION
+void dataStaff() {};
+void dataShift() {};
 
-    cout << "\n==== Tambah Antrian ====" << endl;
-    queue[queueCount][0] = to_string(queueCount + 1); // Nomor antrian otomatis
-    cout << "Masukkan Nama Pelanggan: ";
-    cin.ignore();
-    getline(cin, queue[queueCount][1]);
-    cout << "Masukkan Jenis Layanan: ";
-    getline(cin, queue[queueCount][2]);
-    queue[queueCount][3] = "Menunggu";
-    queueCount++;
-    cout << "Antrian berhasil ditambahkan!" << endl;
-}
-
-void setStatusQueue(string staffID)
-{
-    if (queueCount == 0)
-    {
-        cout << "\n==== Update Status Antrian ====" << endl;
-        cout << "Tidak ada antrian aktif." << endl;
-        return;
-    }
-
+void staffManagement(){    
+    system("cls");
     int choice;
+    cout << "Staff Management" << endl;
+    cout << "1. Data Staff" << endl;
+    cout << "2. Data Shift" << endl;
+    cout << "10. Menu" << endl;
+    cout << "99. Logout" << endl;
+    cout << "0. Quit" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
 
-    do
-    {
-        cout << "\n==== Update Status Antrian ====" << endl;
-        cout << "1. Antrian Saat ini Selesai" << endl;
-        cout << "2. Proses Antrian Berikutnya" << endl;
-        cout << "3. Kembali" << endl;
-        cout << "Pilih menu: ";
-        cin >> choice;
-
-        switch (choice)
-        {
+    switch (choice){
         case 1:
-            // Menyelesaikan Status Antrian Saat ini "Selesai"
-            cout << "\n==== Status Antrian ====" << endl;
-            for (int i = 0; i < queueCount; i++)
-            {
-                if (queue[i][3] == "Proses")
-                {
-                    cout << "Nomor Antrian " << queue[i][0] << " Atas Nama " << queue[i][1] << " Selesai" << endl;
-                    queue[i][3] = "Selesai"; // Mengubah status antrian menjadi "Selesai"
-                    viewQueue();
-
-                    updateDateTime(); // Update waktu saat ini
-                    reports[reportCount][0] = currentDateTime;
-                    reports[reportCount][1] = staffID;
-                    reports[reportCount][2] = queue[i][1];
-                    reports[reportCount][3] = queue[i][2];
-                    reportCount++;
-
-                    return;
-                }
-            }
-            cout << "Belum ada antrian yang di Proses" << endl;
+            dataStaff();
             break;
         case 2:
-            // Menjadikan Status Antrian Berikutnya "Proses"
-            cout << "\n==== Status Antrian ====" << endl;
-            for (int i = 0; i < queueCount; i++)
-            {
-                if (queue[i][3] == "Menunggu")
-                {
-                    cout << "Nomor Antrian " << queue[i][0] << " Atas Nama " << queue[i][1] << " di Proses" << endl;
-                    queue[i][3] = "Proses"; // Mengubah status antrian menjadi "Proses"
-                    viewQueue();
-                    return;
-                }
-            }
-            cout << "Belum ada antrian Menunggu" << endl;
+            dataShift();
+            break;
+        case 10:
+            menuAdmin();
+            break;
+        case 99:
+            logout();
+            main();
+        case 0:
+            cout << "Thankyou for coming!";
+            break;
+        default:
+            system("cls");
+            cout << "Your input not found!" << endl;
+            staffManagement();
+    }
+}
+
+// =============== REPORT FUNCTION
+
+void reportService(){};
+void trackingStaff(){};
+
+void serviceReport(){
+    system("cls");
+    int choice;
+    cout << "Service Report" << endl;
+    cout << "1. Report Customer" << endl;
+    cout << "2. Tracking Staff" << endl;
+    cout << "10. Menu" << endl;
+    cout << "99. Logout" << endl;
+    cout << "0. Quit" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    switch (choice){
+        case 1:
+            reportService();
+            break;
+        case 2:
+            trackingStaff();
+            break;
+        case 10:
+            menuAdmin();
+            break;
+        case 99:
+            logout();
+            main();
+        case 0:
+            cout << "Thankyou for coming!";
+            break;
+        default:
+            system("cls");
+            cout << "Your input not found!" << endl;
+            serviceReport();
+    }
+}
+
+// =============== MENU STAFF ===============
+void menuStaff() {
+    system("cls");
+    int choice;
+    cout << "Welcome Staff" << endl;
+    cout << "1. Queue Management" << endl;
+    cout << "2. Booking Management" << endl;
+    cout << "99. Logout" << endl;
+    cout << "0. Quit" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    switch (choice){
+        case 1:
+            queueManagement();
+            break;
+        case 2:
+            bookingManagement();
+            break;
+        case 99:
+            logout();
+            main();
+        case 0:
+            cout << "Thankyou for coming!";
+            break;
+        default:
+            system("cls");
+            cout << "Your input not found!" << endl;
+            menuStaff();
+    }
+}
+
+// =============== QUEUE FUNCTION
+void addQueue(){};
+void nextQueue(){};
+void doneQueue(){};
+
+void queueManagement() {
+    system("cls");
+    int choice;
+    cout << "Queue Management" << endl;
+    cout << "Queue Active : 10" << endl;
+    cout << "Queue Complate : 10" << endl;
+    cout << "Queue : 0010" << endl;
+    cout << "1. Add Queue" << endl;
+    cout << "2. Next Queue" << endl;
+    cout << "3. Done Queue" << endl;
+    cout << "10. Menu" << endl;
+    cout << "99. Logout" << endl;
+    cout << "0. Quit" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+
+    switch (choice){
+        case 1:
+            addQueue();
+            break;
+        case 2:
+            nextQueue();
             break;
         case 3:
-            return;
+            doneQueue();
+        case 10:
+            menuStaff();
+        case 99:
+            logout();
+            main();
+        case 0:
+            cout << "Thankyou for coming!";
+            break;
         default:
-            cout << "Pilihan tidak valid. Coba lagi!" << endl;
-        }
-    } while (choice != 3);
-}
-
-void viewQueue()
-{
-    cout << "\n==== Antrian Aktif ====" << endl;
-    if (queueCount == 0)
-    {
-        cout << "Tidak ada antrian aktif." << endl;
-        return;
+            system("cls");
+            cout << "Your input not found!" << endl;
+            queueManagement();
     }
+};
 
-    for (int i = 0; i < queueCount; i++)
-    {
-        cout << "Nomor: " << queue[i][0] << ", Nama: " << queue[i][1]
-             << ", Layanan: " << queue[i][2] << ", Status Antrian: " << queue[i][3] << endl;
+// =============== BOOKING FUNCTION
+
+void newBooking() {};
+void confBooking() {};
+void timeTabel() {};
+
+void bookingManagement() {
+    system("cls");
+    int choice;
+    cout << "Booking Management" << endl;
+    cout << "1. New Booking" << endl;
+    cout << "2. Confirmation Booking" << endl;
+    cout << "3. Timetable " << endl;
+    cout << "10. Menu" << endl;
+    cout << "99. Logout" << endl;
+    cout << "0. Quit" << endl;
+    cout << "Enter Your Choice : ";
+    cin >> choice;
+
+    switch (choice){
+        case 1:
+            newBooking();
+            break;
+        case 2:
+            confBooking();
+            break;
+        case 3:
+            timeTabel();
+        case 10:
+            menuStaff();
+        case 99:
+            logout();
+            main();
+        case 0:
+            cout << "Thankyou for coming!";
+            break;
+        default:
+            system("cls");
+            cout << "Your input not found!" << endl;
+            bookingManagement();
     }
-}
-
-void updateDateTime()
-{
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-
-    char datetime[20];
-    strftime(datetime, sizeof(datetime), "%Y%m%d %H:%M", ltm);
-    currentDateTime = datetime;
-}
+};
