@@ -14,6 +14,8 @@
         "random": "cpp",
         "text_encoding": "cpp",
         "string": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "cstddef": "cpp",
+        "typeinfo": "cpp"
     }
 }
