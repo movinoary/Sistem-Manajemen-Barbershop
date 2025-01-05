@@ -48,6 +48,7 @@ void setShift();
 void addService();
 void viewServices();
 string chooseService();
+void viewPopularServices();
 
 // Fungsi untuk fitur report
 void viewReportDaily();
@@ -120,7 +121,8 @@ void adminMenu()
         cout << "6. Laporan Harian" << endl;
         cout << "7. Laporan Per Staff" << endl;
         cout << "8. Kinerja Staff" << endl;
-        cout << "9. Kembali ke Menu Utama" << endl;
+        cout << "9. Lihat Layanan Populer" << endl;
+        cout << "10. Kembali ke Menu Utama" << endl;
         cout << "Pilih menu: ";
         cin >> choice;
 
@@ -151,6 +153,9 @@ void adminMenu()
             viewStaffPerformance();
             break;
         case 9:
+            viewPopularServices();
+            break;
+        case 10:
             return;
         default:
             cout << "Pilihan tidak valid. Coba lagi!" << endl;
@@ -305,6 +310,84 @@ string chooseService()
 
     cout << "Pilihan layanan tidak valid." << endl;
     return "";
+}
+
+void viewPopularServices()
+{
+    string startDate, endDate;
+    cout << "\n==== Layanan Populer ====" << endl;
+    cout << "Masukkan tanggal awal (YYYYMMDD): ";
+    cin >> startDate;
+    cout << "Masukkan tanggal akhir (YYYYMMDD): ";
+    cin >> endDate;
+
+    string serviceNames[MAX_SERVICES];
+    int serviceCounts[MAX_SERVICES];
+
+    for (int i = 0; i < serviceCount; i++)
+    {
+        serviceNames[i] = services[i][1];
+        serviceCounts[i] = 0;
+    }
+
+    // Menghitung penggunaan layanan dalam periode
+    int totalTransactions = 0;
+    for (int i = 0; i < reportCount; i++)
+    {
+        string transactionDate = reports[i][0].substr(0, 8);
+        if (transactionDate >= startDate && transactionDate <= endDate)
+        {
+            totalTransactions++;
+            // Mencari dan menambah counter layanan yang sesuai
+            string serviceName = reports[i][3];
+            for (int j = 0; j < serviceCount; j++)
+            {
+                if (serviceNames[j] == serviceName)
+                {
+                    serviceCounts[j]++;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Mengurutkan layanan berdasarkan populer
+    for (int i = 0; i < serviceCount - 1; i++)
+    {
+        for (int j = 0; j < serviceCount - i - 1; j++)
+        {
+            if (serviceCounts[j] < serviceCounts[j + 1])
+            {
+                // Tukar jumlah penggunaan
+                int tempCount = serviceCounts[j];
+                serviceCounts[j] = serviceCounts[j + 1];
+                serviceCounts[j + 1] = tempCount;
+
+                // Tukar nama layanan
+                string tempName = serviceNames[j];
+                serviceNames[j] = serviceNames[j + 1];
+                serviceNames[j + 1] = tempName;
+            }
+        }
+    }
+
+    // Menampilkan hasil
+    cout << "\nPeriode: " << startDate << " sampai " << endDate << endl;
+    cout << "Total transaksi dalam periode: " << totalTransactions << endl;
+    cout << "\nUrutan Layanan Berdasarkan Popularitas:" << endl;
+    cout << "----------------------------------------" << endl;
+
+    for (int i = 0; i < serviceCount; i++)
+    {
+        if (serviceCounts[i] > 0)
+        {
+            double percentage = (serviceCounts[i] * 100.0) / totalTransactions;
+            cout << (i + 1) << ". " << serviceNames[i]
+                 << "\n   Jumlah: " << serviceCounts[i] << " kali"
+                 << " (" << fixed << setprecision(1) << percentage << "%)"
+                 << endl;
+        }
+    }
 }
 
 void viewReportDaily()
